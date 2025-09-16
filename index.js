@@ -4,10 +4,10 @@ import { execFile } from "child_process";
 const app = express();
 app.use(express.json());
 
-// Đặt API key nếu muốn (để trống = public)
+// (tuỳ chọn) bảo vệ bằng API key
 const API_KEY = process.env.API_KEY || "";
 
-// Hàm gọi ffprobe
+/** chạy ffprobe và trả JSON */
 function runFfprobe(url, extraArgs = []) {
   return new Promise((resolve, reject) => {
     const args = [
@@ -27,7 +27,7 @@ function runFfprobe(url, extraArgs = []) {
   });
 }
 
-app.get("/", (req, res) => {
+app.get("/", (_req, res) => {
   res.json({ ok: true, hint: "GET /metadata?url=..." });
 });
 
@@ -82,7 +82,5 @@ app.get("/metadata", async (req, res) => {
   }
 });
 
-app.listen(process.env.PORT || 8080, () => {
-  console.log("Listening on", process.env.PORT || 8080);
-});
-
+const PORT = process.env.PORT || 8080;
+app.listen(PORT, () => console.log("Listening on", PORT));
